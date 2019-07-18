@@ -1,0 +1,51 @@
+[
+    {
+        "id": 1,
+        "image": "./assets/images/frodo.jpg",
+        "name": "Frodo"
+    }, {
+        "id": 2,
+        "image": "./assets/images/galadriel.jpg",
+        "name": "Galadriel"
+    }, {
+        "id": 3,
+        "image": "./assets/images/gandalf.jpg",
+        "name": "Gandalf"
+    }, {
+        "id": 4,
+        "image": "./assets/images/legolas.jpg",
+        "name": "Legolas"
+    }, {
+        "id": 5,
+        "image": "./assets/images/sam.jpg",
+        "name": "Sam"
+    }, {
+        "id": 6,
+        "image": "./assets/images/gimli.jpg",
+        "name": "Gimli"
+    }, {
+        "id": 7,
+        "image": "./assets/images/boromir.jpg",
+        "name": "Boromir"
+    }, {
+        "id": 8,
+        "image": "./assets/images/aragorn.jpg",
+        "name": "Aragorn"
+    }, {
+        "id": 9,
+        "image": "./assets/images/arwen.jpg",
+        "name": "Arwen"
+    }, {
+        "id": 10,
+        "image": "./assets/images/elrond.jpg",
+        "name": "Elrond"
+    }, {
+        "id": 11,
+        "image": "./assets/images/gollum.jpg",
+        "name": "Gollum"
+    }, {
+        "id": 12,
+        "image": "./assets/images/bilbo.jpg",
+        "name": "Bilbo"
+    }
+]
