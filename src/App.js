@@ -1,116 +1,117 @@
-import React, { Component } from 'react'
-import logo from './logo.svg';
-import './App.css';
-import CharacterTile from "./components/Charactertile";
-import Jumbotron from "./components/Jumbotron";
-import Navbar from "./components/Navbar";
-import Grid, { Container, Col, Row } from "./components/Grid";
-import Footer from "./components/Footer";
-import characters from "./characters.json";
+import React, { Component } from "react";
+import paintings from "./cards.json";
+import Scoreboard from "./components/Scoreboard";
+import Card from "./components/Card";
 
-/*
-STEPS FOR THE GAME TO FUNCTION:
-1. Random presentation of all characters
-2. Each tile can be "clicked" as true or false, but each character starts each new round as "clicked" === false
-3. Each time a tile is clicked (and goes from false to true), then add to a "top score" counter
-4. If a clicked === true tile gets clicked again, then end the game and restart the round
-  a. Compare the latest score to the last score. If the latest score is higher, then store it as the "Top Score". If the latest score is lower, then do nothing.
-*/
-
-function shuffleCharacters (arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
+// shuffle upon each click
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    [array[i], array[j]] = [array[j], array[i]];
   }
-  return arr;
-};
+  return array;
+}
 
-// establishes beginning state of game
 class App extends Component {
-
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      characters,
-      currentScore: 0,
-      topScore: 0,
-      winlossmessage: "",
-      clicked: []
-    }
-  }
-
-  handleClick = (id) => {
-    if (this.state.clicked.indexOf(id) === -1) {
-      this.handleCalculate();
-      this.setState({ clicked: this.state.clicked.concat(id) });
-    } else {
-      this.handleReset();
-    }
-  };
-  handleCalculate = () => {
-    const newScore = this.state.currentScore + 1;
-    this.setState ({
-      currentScore: newScore,
-      winlossmessage: ""
-    });
-    if (newScore >= this.state.topScore) {
-      this.setState({ topScore: newScore });
-    }
-    else if (newScore === 12) {
-      this.setState({ winlossmessage: "You win!"});
-    }
-    this.handleShuffle();
+  state = {
+    paintings,
+    score: 0,
+    topScore: 0,
+    showAlert: 0,
+    showSuccess: 0,
+    clickedpaintings: []
   };
 
-  handleReset = () => {
+  clickedImage = id => {
+    // assign the state of the empty array to a let to be updated
+    let clickedpaintings = this.state.clickedpaintings;
+    let score = this.state.score;
+    let topScore = this.state.topScore;
     this.setState({
-      currentScore: 0,
-      topScore: this.state.topScore,
-      winlossmessage: "Try again!",
-      clicked: []
+      showAlert: 0
     });
-    this.handleShuffle();
+
+    // if the clicked image has an id of the indexed paintings
+    if (clickedpaintings.indexOf(id) === -1) {
+      // push that id into that id into the array to be stored
+      clickedpaintings.push(id);
+      console.log(clickedpaintings);
+      // run the score function
+      this.handleIncrement();
+      // run the reshuffle function after each click
+      this.makeShuffle();
+    } else if (this.state.score === 12) {
+      // alert player wins
+      this.setState({
+        showSuccess: 1,
+        score: 0,
+        clickedpaintings: []
+      });
+    } else {
+       // alert player loss
+      this.setState({
+        score: 0,
+        clickedpaintings: []
+      });
+      console.log("duplicate");
+      this.setState({
+        showAlert: 1
+      });
+    }
+
+    if (score > topScore) {
+      this.setState({
+        topScore: score
+      });
+    }
   };
 
-  handleShuffle = () => {
-    let shuffledCharacters = shuffleCharacters(characters);
-    this.setState({ characters: shuffledCharacters });
+  // handleIncrement increases this.state.score by 1
+  handleIncrement = () => {
+    // setState updates a components states
+    this.setState({ score: this.state.score + 1 });
   };
 
-  // shows the elements on the page
+  // shuffle up images
+  makeShuffle = () => {
+    this.setState({ paintings: shuffle(paintings) });
+  };
+
   render() {
     return (
-      <div className="App">
-
-        <Navbar
-          currentScore={this.state.currentScore}
+      <div className="container">
+        <div
+          className="alert alert-danger"
+          style={{ opacity: this.state.showAlert }}
+        >
+          You clicked on this already, try again...
+          </div>
+        <div
+          className="alert alert-success"
+          style={{ opacity: this.state.showSuccess }}
+        >
+          Brilliant, you haven't clicked on duplicates!
+          </div>
+        <Scoreboard
+          title="MoMA clicky Game"
+          score={this.state.score}
           topScore={this.state.topScore}
-          winlossmessage={this.state.winlossmessage}
         />
-        
-        <Jumbotron />
-
-        <Container fluid>
-
-          <Row>
-            {this.state.characters.map(character => (
-              <CharacterTile 
-                image={character.image}
-                key={character.id}
-                id={character.id}
-                name={character.name}
-                onClick={this.handleClick}
-              />
-            ))}
-          </Row>
-
-        </Container>
-
-        <Footer />
+        <div className="row">
+          {this.state.paintings.map(painting => (
+            <Card
+              key={painting.id}
+              id={painting.id}
+              artist={painting.artist}
+              title={painting.title}
+              year={painting.year}
+              image={painting.image}
+              clickedImage={this.clickedImage}
+            />
+          ))}
+        </div>
       </div>
     );
   }
 }
-
 export default App;
